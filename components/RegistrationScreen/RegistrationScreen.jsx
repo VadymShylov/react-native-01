@@ -8,161 +8,313 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  TouchableWithoutFeedback,
+  ImageBackground,
 } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 
+const initialState = {
+  userName: "",
+  email: "",
+  password: "",
+};
 
-
-export const RegistrationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-//   const [isOnFocus, setIsOnFocus] = useState(false);
+  const [state, setState] = useState(initialState);
+  const [isFocusInput, setIsFocusInput] = useState({
+    email: "",
+    password: "",
+  });
+  const [isShowPassword, setIsShowPassword] = useState(true);
 
-//   const keyboardHide = () => {
-//     setIsShowKeyboard(!isShowKeyboard);
-//     Keyboard.dismiss();
-//   };
+  const keyboardHide = () => {
+    //  if (isFocusInput.email === "" || isFocusInput.password === "") {
+    //    alert("Email та Password повинні бути заповнені.");
+    //    return;
+    //  }
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
+    console.log(state);
+    setState(initialState);
+  };
+
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        {/* Кнопка уходит под клавиатуру но не возвращается */}
-        <View
-          style={{ ...styles.form, marginBottom: !isShowKeyboard ? "" : "" }}
+        <ImageBackground
+          source={require("../../assets/images/bg.jpg")}
+          style={styles.image}
         >
-          {/* userIcon */}
-          <View style={styles.userIconWrapper}>
-            <View style={styles.userIcon}></View>
-            <EvilIcons
-              name="plus"
-              size={25}
-              color="#FF6C00"
-              style={styles.iconPlus}
-            />
-          </View>
-
-          <Text style={styles.text}>Реєстрація</Text>
-          <View style={{ marginTop: 32 }}>
-            <TextInput
-              placeholder="Логін"
-              style={styles.input}
-              onFocus={() => {}}
-            />
-          </View>
-          <View>
-            <TextInput
-              placeholder="Адреса електронної пошти"
-              style={styles.input}
-              onFocus={() => {}}
-            />
-          </View>
-          <View style={{ marginBottom: 32 }}>
-            <TextInput
-              placeholder="Пароль"
-              secureTextEntry={true}
-              style={{ ...styles.input, position: "relative" }}
-              onFocus={() => {}}
-            />
-            <Text
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <View
               style={{
-                position: "absolute",
-                top: 35,
-                right: 30,
-                color: "#1b4371",
+                ...styles.formWrapper,
+
+                ...Platform.select({
+                  ios: {
+                    marginTop: isShowKeyboard ? 195 : 219,
+                  },
+                  android: {
+                     marginTop: isShowKeyboard ? -70 : 0,
+                 
+                  },
+                }),
               }}
             >
-              Показати
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.btn} activeOpacity={0.8}>
-            <Text style={styles.textBtn}>Зареєстуватися</Text>
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.textAccount}> Вже є акаунт? Увійти</Text>
-          </View>
-        </View>
+              <View style={styles.userIconWrapper}>
+                <View style={styles.userIcon}></View>
+                <EvilIcons
+                  name="plus"
+                  size={25}
+                  color="#FF6C00"
+                  style={styles.iconPlus}
+                />
+              </View>
+
+              <Text
+                style={{
+                  ...styles.title,
+                  marginTop: isShowKeyboard ? 70 : 0,
+                }}
+              >
+                Реєстрація
+              </Text>
+
+              <View
+                style={{
+                  ...styles.form,
+                  paddingBottom: isShowKeyboard ? 32 : 110,
+                }}
+              >
+                <View style={styles.inputName}>
+                  <TextInput
+                    style={{
+                      ...styles.input,
+                      borderColor: isFocusInput.userName
+                        ? "#FF6C00"
+                        : "#F6F6F6",
+                      backgroundColor: isFocusInput.userName
+                        ? "#FFFFFF"
+                        : "#F6F6F6",
+                    }}
+                    textAlign={"left"}
+                    placeholderTextColor={"#BDBDBD"}
+                    value={state.userName}
+                    placeholder="Логін"
+                    onFocus={() => {
+                      setIsShowKeyboard(true),
+                        setIsFocusInput({
+                          ...isFocusInput,
+                          userName: true,
+                        });
+                    }}
+                    onBlur={() => {
+                      setIsFocusInput({
+                        ...isFocusInput,
+                        userName: false,
+                      });
+                    }}
+                    onChangeText={(value) =>
+                      setState((prevState) => ({
+                        ...prevState,
+                        userName: value,
+                      }))
+                    }
+                  />
+                </View>
+                <View style={styles.inputMail}>
+                  <TextInput
+                    style={{
+                      ...styles.input,
+                      borderColor: isFocusInput.email ? "#FF6C00" : "#F6F6F6",
+                      backgroundColor: isFocusInput.email
+                        ? "#FFFFFF"
+                        : "#F6F6F6",
+                    }}
+                    textAlign={"left"}
+                    placeholderTextColor={"#BDBDBD"}
+                    value={state.email}
+                    placeholder="Адреса електронної пошти"
+                    onFocus={() => {
+                      setIsShowKeyboard(true),
+                        setIsFocusInput({
+                          ...isFocusInput,
+                          email: true,
+                        });
+                    }}
+                    onBlur={() => {
+                      setIsFocusInput({
+                        ...isFocusInput,
+                        email: false,
+                      });
+                    }}
+                    onChangeText={(value) =>
+                      setState((prevState) => ({
+                        ...prevState,
+                        email: value,
+                      }))
+                    }
+                  />
+                </View>
+
+                <View style={styles.inputPassword}>
+                  <TextInput
+                    style={{
+                      ...styles.input,
+                      borderColor: isFocusInput.password
+                        ? "#FF6C00"
+                        : "#F6F6F6",
+                      backgroundColor: isFocusInput.password
+                        ? "#FFFFFF"
+                        : "#F6F6F6",
+                    }}
+                    textAlign={"left"}
+                    placeholderTextColor={"#BDBDBD"}
+                    value={state.password}
+                    secureTextEntry={isShowPassword}
+                    placeholder="Пароль"
+                    onFocus={() => {
+                      setIsShowKeyboard(true),
+                        setIsFocusInput({
+                          ...isFocusInput,
+                          password: true,
+                        });
+                    }}
+                    onBlur={() => {
+                      setIsFocusInput({
+                        ...isFocusInput,
+                        password: false,
+                      });
+                    }}
+                    onChangeText={(value) =>
+                      setState((prevState) => ({
+                        ...prevState,
+                        password: value,
+                      }))
+                    }
+                  />
+                  <Text
+                    style={styles.showPass}
+                    onPress={() => {
+                      setIsShowPassword((prevState) => !prevState);
+                    }}
+                  >
+                    {isShowPassword ? "Показати" : "Приховати"}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  activeOpacity={0.8}
+                  onPress={keyboardHide}
+                >
+                  <Text style={styles.buttonText}>Увійти</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                  <Text style={styles.aside}>Вже є акаунт? Увійти</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
       </View>
-    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  formWrapper: {
+     paddingTop: 92,
+    paddingLeft: 16,
+    paddingRight: 16,
     backgroundColor: "#FFFFFF",
-    //  justifyContent: "center",
-    //  alignItems: "center",
-    borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    //  paddingTop: 32,
-    paddingBottom: 45,
-  },
-  form: {
+    borderTopLeftRadius: 25,
     justifyContent: "center",
-    alignItems: "center",
   },
-  text: {
-    color: "#212121",
-    alignItems: "center",
-    fontFamily: "Roboto-Regular",
+  title: {
+    fontFamily: "Roboto-Medium",
+    fontStyle: "normal",
     fontSize: 30,
-    fontWeight: "500",
     lineHeight: 35,
-    letterSpacing: 0.3,
-    marginTop: 82,
-  },
-  input: {
-    borderWidth: 1,
-    width: 343,
-
-    borderColor: "#e8e8e8",
-    backgroundColor: "#e8e8e8",
+    letterSpacing: 0.16,
     color: "#212121",
-    padding: 16,
-    marginTop: 16,
-    borderRadius: 10,
-    fontSize: 16,
-  },
-  inputActive: {
-    borderColor: "#ff6c00",
-    backgroundColor: "#ffffff",
-  },
-  btn: {
-    backgroundColor: "#ff6c00",
-    width: 343,
-    height: 50,
-    marginBottom: 16,
-    marginHorizontal: 16,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "Roboto-Medium",
-  },
-  textBtn: {
-    color: "#ffffff",
-    fontSize: 16,
-  },
-  textAccount: {
-    fontWeight: "400",
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-    color: "#1b4371",
+    textAlign: "center",
   },
   userIconWrapper: {
     position: "absolute",
-    height: 132,
+    left: "35%",
+    top: "-11%",
     width: 120,
-    //  marginBottom: 32,
-    alignItems: "center",
-    top: -60,
-  },
-  userIcon: {
     height: 120,
-    width: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
-    marginBottom: 32,
   },
   iconPlus: {
-    left: 60,
-    bottom: 70,
+    position: "absolute",
+    left: "90%",
+    top: "65%",
+  },
+  input: {
+    fontFamily: "Roboto-Regular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    paddingLeft: 16,
+    borderWidth: 1,
+    height: 50,
+    borderRadius: 8,
+  },
+  inputName: {
+    marginTop: 32,
+  },
+  inputMail: {
+    marginTop: 16,
+  },
+  inputPassword: {
+    marginTop: 16,
+  },
+  showPass: {
+    fontFamily: "Roboto-Regular",
+    fontStyle: "normal",
+    lineHeight: 19,
+    fontSize: 16,
+    position: "absolute",
+    top: 16,
+    left: 260,
+    color: "#1B4371",
+  },
+  button: {
+    marginTop: 43,
+    backgroundColor: "#FF6C00",
+    height: 61,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontFamily: "Roboto-Regular",
+    fontStyle: "normal",
+    lineHeight: 19,
+    color: "#FFFFFF",
+  },
+  aside: {
+    fontFamily: "Roboto-Regular",
+    fontStyle: "normal",
+    lineHeight: 19,
+    marginTop: 16,
+    textAlign: "center",
+    color: "#1B4371",
   },
 });
