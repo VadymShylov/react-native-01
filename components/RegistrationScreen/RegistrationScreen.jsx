@@ -36,6 +36,7 @@ export const RegistrationScreen = ({ navigation }) => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
     console.log(state);
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -58,8 +59,7 @@ export const RegistrationScreen = ({ navigation }) => {
                     marginTop: isShowKeyboard ? 195 : 219,
                   },
                   android: {
-                     marginTop: isShowKeyboard ? -70 : 0,
-                 
+                    marginTop: isShowKeyboard ? -70 : 0,
                   },
                 }),
               }}
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   formWrapper: {
-     paddingTop: 92,
+    paddingTop: 92,
     paddingLeft: 16,
     paddingRight: 16,
     backgroundColor: "#FFFFFF",

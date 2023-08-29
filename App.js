@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 import { LoginScreen } from "./components/LoginScreen/LoginScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { Home } from "./Screens/Home/Home";
 
 export default function App() {
   const Authentication = createStackNavigator();
@@ -38,6 +39,11 @@ export default function App() {
             <Authentication.Screen
               name="Login"
               component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Authentication.Screen
+              name="Home"
+              component={Home}
               options={{ headerShown: false }}
             />
           </Authentication.Navigator>

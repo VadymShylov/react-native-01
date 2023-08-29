@@ -33,7 +33,8 @@ export const LoginScreen = ({ navigation }) => {
     }
     Keyboard.dismiss();
     setIsShowKeyboard(false);
-    console.log(state);
+     console.log(state);
+     navigation.navigate("Home");
     setState(initialState);
   };
 
